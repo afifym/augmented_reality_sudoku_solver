@@ -64,3 +64,5 @@ def draw_sudoku(to_draw, zeros_indices, save=False):
                 pygame.image.save(screen, "sudoku.jpeg")
         pygame.display.update()
     pygame.quit()
+
+

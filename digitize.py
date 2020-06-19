@@ -28,3 +28,6 @@ def digitize_captured(sudo, my_model):
     digits = np.argmax(y, axis=1)
     grid = digits.reshape((9, 9), order='F')
     return grid.tolist()
+
+
+

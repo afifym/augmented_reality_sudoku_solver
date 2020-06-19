@@ -75,3 +75,4 @@ def draw_sudoku(to_draw, zeros_indices, save=False):
             break
 
     cv2.destroyAllWindows()
+

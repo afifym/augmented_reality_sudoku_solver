@@ -89,3 +89,5 @@ def capture_sudo(cap):
     return [], default_sudo, [], img, False
 
 
+
+

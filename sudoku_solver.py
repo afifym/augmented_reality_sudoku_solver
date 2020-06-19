@@ -377,5 +377,5 @@ class Sudoku:
             if num not in self.ordinaryGrid[row]:
                 missing_numbers.append(num)
         return missing_numbers
-    # ----------------------------------------------------------------------------------------
+
 
