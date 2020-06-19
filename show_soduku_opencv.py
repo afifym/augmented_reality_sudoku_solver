@@ -1,3 +1,13 @@
+"""
+Author: Mohamed Afify
+Date: May 2020
+
+- This file displays a sodoku and shows the added numbers
+- Can be used when testing the solving algorithm on grids (like the ones in grids.py)
+    before using a camera.
+- Uses opencv
+"""
+
 import cv2
 
 

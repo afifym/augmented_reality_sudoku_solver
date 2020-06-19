@@ -1,60 +1,38 @@
-"""
-Author: Mohamed Afify
-Date: May 2020
-
-Overview:
-    - The Sudoku class contains all the information about the sudoku and the methods
-    needed for the algorithm
-    - It would be hard to explain everything in this file, but it shouldn't be hard
-    if you have read and understood the solve.py file
-
-"""
-
-
 def get_column(matrix, i):
     return [row[i] for row in matrix]
 
 
 class Sudoku:
-    def __init__(self, grid, ordinaryGrid):
+    def __init__(self, grid, ordinary_grid):
+        """
+        Match features from two images
+
+        Arguments:
+        des1 -- list of the keypoint descriptors in the first image
+        des2 -- list of the keypoint descriptors in the second image
+
+        Returns:
+        match -- list of matched features from two images. Each match[i] is k or less matches for the same query descriptor
+        """
         self.grid = grid
-        self.ordinaryGrid = ordinaryGrid
+        self.ordinary_grid = ordinary_grid
         self.notes = []
         self.added = 0
-        self.solved = False
 
-        empty_cells = []
-        for row in range(0, 9):
-            for col in range(0, 9):
-                if self.ordinaryGrid[row][col] == 0:
-                    empty_cells.append([row, col])
-        self.emptyCells = empty_cells
-
-    def __repr__(self):
-        print(self.grid)
-        print(self.notes)
-        print(self.added)
-
-    ##########################################################################################
     # ------------------------------Adding Numbers and Updating Blocks------------------------
-    ##########################################################################################
     def add_num_in_blk(self, number, block, row, column):
-        self.grid[block][row][column] = number
         self.added += 1
+        self.grid[block][row][column] = number
         self.update_ord_grid(self.grid)
-        if len(self.emptyCells) == self.added:
-            self.solved = True
 
     def add_num_in_ord(self, number, row, column):
-        self.ordinaryGrid[row][column] = number
         self.added += 1
-        self.update_blk_grid(self.ordinaryGrid)
-        if len(self.emptyCells) == self.added:
-            self.solved = True
+        self.ordinary_grid[row][column] = number
+        self.update_blk_grid(self.ordinary_grid)
 
     def update_ord_grid(self, blk_grid):
         # Updates the block grid using the ordinary grid
-        self.ordinaryGrid = [blk_grid[0][0] + blk_grid[1][0] + blk_grid[2][0],
+        self.ordinary_grid = [blk_grid[0][0] + blk_grid[1][0] + blk_grid[2][0],
                               blk_grid[0][1] + blk_grid[1][1] + blk_grid[2][1],
                               blk_grid[0][2] + blk_grid[1][2] + blk_grid[2][2],
                               blk_grid[3][0] + blk_grid[4][0] + blk_grid[5][0],
@@ -76,9 +54,7 @@ class Sudoku:
                      [ord_grid[6][3:6], ord_grid[7][3:6], ord_grid[8][3:6]],
                      [ord_grid[6][6:9], ord_grid[7][6:9], ord_grid[8][6:9]]]
 
-    ##########################################################################################
-    # ------------------------------By block Solving------------------------
-    ##########################################################################################
+    # ---------------------------------------------------------------------------------------- Solving by block Rule
     def find_num_blk_instances(self, number):
         locations = []
         for block in range(0, 9):
@@ -178,7 +154,7 @@ class Sudoku:
 
     def add_note_or_num(self, number, block, valid_cells):
         # Adds a note or inserts a missing number
-        # Adds a note if the number of valid cells in this block for a certain number is 2
+        # Adds a note if the number of valid cells in this block for a certain number is more than one
         # Inserts a number otherwise, and also removes notes related to that number in self.notes
         if len(valid_cells) == 1:
             for note in self.notes:
@@ -200,15 +176,13 @@ class Sudoku:
                 self.notes.append([number, block, valid_cells[0][0], valid_cells[0][1]])
                 self.notes.append([number, block, valid_cells[1][0], valid_cells[1][1]])
 
-    ##########################################################################################
-    # ------------------------------Solving using rows and columns (Simple)-------------------
-    ##########################################################################################
+    # ----------------------------------------------------------------------------------------
     def solve_by_row(self):
         # Solving the sudoku using the row rule
         # By looking for rows having a single empty slot (0) and replacing it with the missing number
         # input: ordinary grid (9x9)   >>>   output: inserting missing number
         for row in range(0, 9):
-            numbers_in_row = self.ordinaryGrid[row]
+            numbers_in_row = self.ordinary_grid[row]
             if numbers_in_row.count(0) == 1:
                 k = numbers_in_row.index(0)
                 for number in range(1, 10):
@@ -219,7 +193,7 @@ class Sudoku:
         # Solving the sudoku using the column rule
         # By looking for columns having a single empty slot (0) and replacing it with the missing number
         # input: ordinary grid (9x9)   >>>   output: inserting missing number
-        ord_grid_t = [list(x) for x in zip(*self.ordinaryGrid)]  # Getting the transpose to make the algorithm easier
+        ord_grid_t = [list(x) for x in zip(*self.ordinary_grid)]  # Getting the transpose to make the algorithm easier
         for col in range(0, 9):
             numbers_in_col = ord_grid_t[col]
             if numbers_in_col.count(0) == 1:
@@ -227,14 +201,12 @@ class Sudoku:
                     if number not in numbers_in_col:
                         self.add_num_in_ord(number, numbers_in_col.index(0), col)
 
-    ##########################################################################################
-    # ------------------------------Solving by rows and columns (complex)---------------------
-    ##########################################################################################
+    # ----------------------------------------------------------------------------------------
     def find_ord_instances_for_num(self, number):
         locations = []
         for row in range(0, 9):
             for col in range(0, 9):
-                if self.ordinaryGrid[row][col] == number:
+                if self.ordinary_grid[row][col] == number:
                     locations.append([row, col])
         return locations
 
@@ -269,14 +241,14 @@ class Sudoku:
     def find_free_cells_in_row(self, row):
         row_free_cells = []
         for col in range(0, 9):
-            if self.ordinaryGrid[row][col] == 0:
+            if self.ordinary_grid[row][col] == 0:
                 row_free_cells.append(col)
         return row_free_cells
 
     def find_free_cells_in_col(self, col):
         col_free_cells = []
         for row in range(0, 9):
-            if get_column(self.ordinaryGrid, col)[row] == 0:
+            if get_column(self.ordinary_grid, col)[row] == 0:
                 col_free_cells.append(row)
 
         return col_free_cells
@@ -312,13 +284,11 @@ class Sudoku:
         if len(col_valid_cells) == 1:
             self.add_num_in_ord(number, col_valid_cells[0], col)
 
-    ##########################################################################################
-    # ------------------------------Solving by Cell-------------------------
-    ##########################################################################################
+    # ---------------------------------------------------------------------------------------- Solve By Cell
     def solve_by_cell_in_row(self, row):
         empty_cells = []
         for cell in range(0, 9):
-            if self.ordinaryGrid[row][cell] == 0:
+            if self.ordinary_grid[row][cell] == 0:
                 empty_cells.append(cell)
 
         missing_numbers = self.get_missing_numbers_row(row)
@@ -344,7 +314,7 @@ class Sudoku:
     def solve_by_cell_in_col(self, col):
         empty_cells = []
         for cell in range(0, 9):
-            if self.ordinaryGrid[cell][col] == 0:
+            if self.ordinary_grid[cell][col] == 0:
                 empty_cells.append(cell)
         missing_numbers = self.get_missing_numbers_col(col)
         k = 0
@@ -367,14 +337,14 @@ class Sudoku:
     def get_missing_numbers_col(self, col):
         missing_numbers = []
         for num in range(1, 10):
-            if num not in get_column(self.ordinaryGrid, col):
+            if num not in get_column(self.ordinary_grid, col):
                 missing_numbers.append(num)
         return missing_numbers
 
     def get_missing_numbers_row(self, row):
         missing_numbers = []
         for num in range(1, 10):
-            if num not in self.ordinaryGrid[row]:
+            if num not in self.ordinary_grid[row]:
                 missing_numbers.append(num)
         return missing_numbers
     # ----------------------------------------------------------------------------------------

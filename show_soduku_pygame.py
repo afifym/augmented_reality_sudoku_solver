@@ -1,5 +1,14 @@
 import pygame.freetype  # Import the freetype module.
 
+"""
+Author: Mohamed Afify
+Date: May 2020
+
+- This file displays a sodoku and shows the added numbers
+- Can be used when testing the solving algorithm on grids (like the ones in grids.py)
+    before using a camera.
+- Uses pygame 
+"""
 
 def get_zeros(to_draw):
     list_z = []
@@ -52,6 +61,6 @@ def draw_sudoku(to_draw, zeros_indices, save=False):
                     j += margin
                 i += margin
             if save:
-                pygame.image.save(screen, "output/sudoku.jpeg")
+                pygame.image.save(screen, "sudoku.jpeg")
         pygame.display.update()
     pygame.quit()
