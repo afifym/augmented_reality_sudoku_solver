@@ -4,8 +4,8 @@
 
 ## Overview
 The project consists of 3 parts:
-  1. Compute Vision - To detect and extract a sudoku from a camera input.
-  2. Deep Learning - To predict whether each cell contains a number (0 to 9) or is just empty.
+  1. Computer Vision - To detect and extract a sudoku from a camera input.
+  2. Deep Learning - To predict whether each cell contains a number (1 to 9) or is just empty.
   3. Python Algorithm - To solve the sudoku
   
  ## Notes
